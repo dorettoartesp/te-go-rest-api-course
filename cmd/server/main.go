@@ -1,15 +1,29 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"net/http"
+
+	transportHTTP "github.com/dorettoartesp/te-go-rest-api-course/internal/trasnport/http"
+)
 
 // App - the struct which contains things like pointers
 // to database connections
 type App struct {
 }
 
-// Runs - sets up our application
+// Run - sets up our application
 func (app *App) Run() error {
 	fmt.Println("Setting up our app...")
+
+	handler := transportHTTP.NewHandler()
+	handler.SetupRoutes()
+
+	if err := http.ListenAndServe(":8080", handler.Router); err != nil {
+		fmt.Println("Failed to set up server")
+		return err
+	}
+
 	return nil
 }
 
